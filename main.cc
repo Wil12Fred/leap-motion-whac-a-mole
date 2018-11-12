@@ -635,7 +635,6 @@ void read2(int SocketFD){
 			n = read(SocketFD, buffer, 1); //reading 1 bytes
 			std::string action(buffer);
 			bzero(buffer, 1); //equal to the before
-
 			if (action == "G"){ // Responsive when exist movement in Game
 				//Cl_game(SocketFD,size_msg);
 			} else if(action=="O"){
@@ -651,7 +650,6 @@ void read2(int SocketFD){
 				//std::string msg=Cl_Download(SocketFD, size_msg);
 				//print_message(msg);
 			}
-
 		} while (n == 0);
 	}
 }
