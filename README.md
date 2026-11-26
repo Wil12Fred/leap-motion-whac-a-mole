@@ -15,8 +15,8 @@ is replaced by a mesh rebuilt from a point cloud, before and after noise reducti
 
 The meshes were produced with PCL and MeshLab (per their file headers). **The
 denoising code itself is not in this repository**, only its inputs and outputs. In
-`client.cc` the game loads `original_mesh.obj` for the menu and
-`point_cloud_denoised.obj` for the moles. That is the only code difference from
+`client.cc` the mole model is `point_cloud_denoised.obj`, or `original_mesh.obj`
+when the `topoo` flag is off. These replace `Topo.obj` and `Diglett.obj`. That is the only code difference from
 InteraccionHumanoComputador, along with the server address (`0.0.0.0` here).
 
 ## Build and run
