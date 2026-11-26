@@ -9,3 +9,5 @@ iluminandoTortuga/iluminandoTortuga
 iluminandoTortuga/smooth
 # macOS
 .DS_Store
+tests/test_utils
+tests/run/

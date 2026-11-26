@@ -35,7 +35,25 @@ tortuga: $(TORTUGA_SRC)
 smooth: iluminandoTortuga/smooth.cpp
 	$(CXX) $(CXXFLAGS) -o iluminandoTortuga/smooth $< $(GL_LIBS)
 
+tests/test_utils: tests/test_utils.cpp utilidad.h Model/ParseObj/obj.h
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ tests/test_utils.cpp
+
+# unit tests (in tests/run/, they write scratch files), the server protocol
+# over TCP, and the two GLUT demos on a private xvfb-run display for 4 s
+# (exit 124 = still running), never on the caller's DISPLAY
+test: server tortuga smooth tests/test_utils
+	mkdir -p tests/run
+	cd tests/run && ../test_utils > log.txt || { cat log.txt; exit 1; }
+	tail -1 tests/run/log.txt
+	python3 tests/test_server.py
+	for b in iluminandoTortuga/iluminandoTortuga iluminandoTortuga/smooth; do \
+	  env -u DISPLAY -u WAYLAND_DISPLAY xvfb-run -a timeout 4 $$b > /dev/null 2>&1; rc=$$?; \
+	  [ $$rc -eq 124 ] || { echo "FAIL: $$b exited $$rc"; exit 1; }; \
+	  echo "ok: $$b keeps running under xvfb"; \
+	done
+
 clean:
 	rm -f server client main2 *.o iluminandoTortuga/iluminandoTortuga iluminandoTortuga/smooth
+	rm -f tests/test_utils tests/run/*
 
-.PHONY: all check-client tortuga smooth clean
+.PHONY: all check-client tortuga smooth test clean
