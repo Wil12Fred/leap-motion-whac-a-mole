@@ -36,14 +36,15 @@ bool readFileContentToB64(std::string &filename, std::string &file){
 		file.push_back(B64[((buffer[i*3+1]&0x0f)<<2)|((buffer[i*3+2] & 0xc0) >> 6)]);
 		file.push_back(B64[((buffer[i*3+2]&0x3f))]);
 	}
+	long t=lSize-lSize%3; // los bytes que sobran estan al final, no al inicio
 	if(lSize%3==2){
-		file.push_back(B64[(buffer[0]&0xfc)>>2]);
-		file.push_back(B64[((buffer[0]&0x03)<<4)|((buffer[1] & 0xf0) >> 4)]);
-		file.push_back(B64[((buffer[1]&0x0f)<<2)]);
+		file.push_back(B64[(buffer[t]&0xfc)>>2]);
+		file.push_back(B64[((buffer[t]&0x03)<<4)|((buffer[t+1] & 0xf0) >> 4)]);
+		file.push_back(B64[((buffer[t+1]&0x0f)<<2)]);
 		file.push_back('=');
 	} else if(lSize%3==1){
-		file.push_back(B64[(buffer[0]&0xfc)>>2]);
-		file.push_back(B64[((buffer[0]&0x03)<<4)]);
+		file.push_back(B64[(buffer[t]&0xfc)>>2]);
+		file.push_back(B64[((buffer[t]&0x03)<<4)]);
 		file.push_back('=');
 		file.push_back('=');
 	}
@@ -91,12 +92,17 @@ std::string readB64Content(std::string &b64){
 	}
 	if((i%4)){
 		int j=i%4;
-		int A[4];
+		int A[4]={0,0,0,0};
 		for (int k=0;k<j;k++){
 			A[k]=indB64(b64[i-j+k]);//255;
 		}
-		msg.push_back((A[0]<<2)+((A[1]&0x30)>>4));
-		msg.push_back(((A[1]&0xf)<<4)+((A[2]&0x3c)>>2));
+		// 2 caracteres -> 1 byte, 3 caracteres -> 2 bytes
+		if(j>=2){
+			msg.push_back((A[0]<<2)+((A[1]&0x30)>>4));
+		}
+		if(j==3){
+			msg.push_back(((A[1]&0xf)<<4)+((A[2]&0x3c)>>2));
+		}
 	}
 	return msg;
 }
