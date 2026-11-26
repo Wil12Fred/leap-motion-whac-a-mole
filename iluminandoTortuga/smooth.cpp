@@ -1,6 +1,10 @@
 //#include <GLUT/gl.h>
 //#include <GLUT/glu.h>
+#ifdef __APPLE__
 #include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 
 void init(void) 
 {
