@@ -1,4 +1,4 @@
-# InteraccionHumanoComputador: Whac-a-Mole with Leap Motion
+# leap-motion-whac-a-mole: Whac-a-Mole with Leap Motion
 
 Final project for the Human–Computer Interaction course (Interacción Humano-Computador, 2018).
 It is a 3D *Whac-a-Mole* (moles are "topos"; the mole is a Diglett model) rendered with
@@ -57,6 +57,13 @@ that address.
 
 The rest (code, textures, small models) is under 3 MB. The history was not rewritten.
 The video could move to a release asset or to YouTube only.
+
+## Variant: denoised point-cloud meshes
+
+Branch [`variant/denoised-meshes`](../../tree/variant/denoised-meshes) is the same
+game with the mole model swapped for point-cloud meshes built with PCL and
+MeshLab, before and after denoising (a later video-game programming course, Dec
+2019). It used to be a separate repository, `Programaci-nDeVideoJuegos`.
 
 ## Layout
 
