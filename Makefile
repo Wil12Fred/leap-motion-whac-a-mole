@@ -1,6 +1,7 @@
 CXX      ?= g++
 CXXFLAGS ?= -std=c++11 -O2 -Wno-deprecated
-INCLUDES := -I. -I./Leap -I./Model
+# Leap.h / LeapMath.h come from the SDK (they are not redistributable); Leap/ keeps our listener.
+INCLUDES = -I. $(if $(LEAP_SDK),-I$(LEAP_SDK)/include) -I./Leap -I./Model
 
 ifeq ($(shell uname),Darwin)
 GL_LIBS := -framework GLUT -framework OpenGL
@@ -18,10 +19,14 @@ all: server tortuga smooth check-client
 server: server.cpp utilidad.h
 	$(CXX) $(CXXFLAGS) -o $@ server.cpp -pthread
 
-# Compile-only check of the clients (linking needs libLeap)
+# Compile-only check of the clients; needs the SDK headers, so it is skipped without LEAP_SDK
 check-client:
+ifeq ($(LEAP_SDK),)
+	@echo "check-client: skipped (set LEAP_SDK=/path/to/LeapSDK to compile the clients)"
+else
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c client.cc -o client.o
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c main2.cc -o main2.o
+endif
 
 client main2: %: %.cc
 	@test -n "$(LEAP_SDK)" || { echo "set LEAP_SDK=/path/to/LeapSDK (Leap Motion SDK v2.3.1)"; exit 1; }

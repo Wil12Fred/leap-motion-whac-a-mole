@@ -32,7 +32,7 @@ light.
 | OpenGL / GLUT | `freeglut3-dev` | `freeglut` |
 | libpng (client textures) | `libpng-dev` | `libpng` |
 | tests | `python3 xvfb` | `python xorg-server-xvfb` |
-| client only | **Leap Motion SDK v2.3.1** (`libLeap.so`) — proprietary, discontinued, not in this repository | same |
+| client only | **Leap Motion SDK v2.3.1** (`include/Leap.h`, `include/LeapMath.h`, `lib/x64/libLeap.so`) — proprietary, discontinued, not in this repository; pass its folder as `LEAP_SDK` | same |
 
 ## Build
 
@@ -40,11 +40,11 @@ light.
 |---|---|---|
 | `make server` | C++11, pthreads | builds and runs (tested in CI) |
 | `make tortuga`, `make smooth` | freeglut | build and run (tested in CI under xvfb) |
-| `make check-client` | freeglut headers | `client.cc` and `main2.cc` compile (CI) |
+| `make check-client LEAP_SDK=...` | Leap Motion SDK headers, freeglut headers | compiles `client.cc` and `main2.cc`; skipped without the SDK |
 | `make client LEAP_SDK=...` | Leap Motion SDK v2.3.1, freeglut, libpng | **BUILD NOT VERIFIED**: the SDK is proprietary and cannot be installed in CI |
 
 ```sh
-make                                   # server, tortuga, smooth, compile-check of the clients
+make                                   # server, tortuga, smooth (client check needs LEAP_SDK)
 make client LEAP_SDK=$HOME/LeapSDK     # only with the Leap SDK installed
 ```
 
@@ -102,7 +102,7 @@ The client itself is not tested: it cannot be linked without the Leap SDK.
 |---|---|
 | `client.cc` | game client: GLUT scene, menu, game loop, Leap input, server connection |
 | `server.cpp`, `utilidad.h` | two-player TCP server; padding and Base64 helpers |
-| `Leap/` | Leap Motion SDK headers and the hand-tracking listener |
+| `Leap/` | the hand-tracking listener (`leapmotion.h`); the SDK headers come from `$LEAP_SDK/include` |
 | `Model/` | OBJ/material/mesh loading (`ParseObj/obj.h`) |
 | `primitivas.h`, `light.h`, `camara.h`, `Vector_tools.h`, `png_texture.h` | drawing helpers, lights, camera, texture loading |
 | `*.obj`, `*.mtl`, `*.png`, `*.jpg` | models and textures |
@@ -135,7 +135,8 @@ Final project for a human–computer interaction course at university, 2018.
 
 ## License
 
-MIT — see [LICENSE](LICENSE) — for the code written for this project. Not covered:
-`Leap/Leap.h` and `Leap/LeapMath.h` are Leap Motion SDK headers under Leap Motion's own
-SDK agreement; `Model/ParseObj/obj.h` appears to be derived from the public OBJ-Loader
+MIT — see [LICENSE](LICENSE) — for the code written for this project. The Leap Motion
+SDK headers are not redistributable, so they are not in this repository (nor in its
+history): the build reads them from `$LEAP_SDK/include`. Not covered by the MIT license:
+`Model/ParseObj/obj.h` appears to be derived from the public OBJ-Loader
 library; the 3D models and textures come from their respective authors.

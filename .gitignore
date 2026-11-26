@@ -11,3 +11,7 @@ iluminandoTortuga/smooth
 .DS_Store
 tests/test_utils
 tests/run/
+
+# Leap Motion SDK headers: proprietary, take them from the SDK (see README)
+Leap/Leap.h
+Leap/LeapMath.h
