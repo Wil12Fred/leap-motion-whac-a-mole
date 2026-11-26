@@ -1,0 +1,11 @@
+# build output
+*.o
+*.gch
+server
+client
+main2
+main
+iluminandoTortuga/iluminandoTortuga
+iluminandoTortuga/smooth
+# macOS
+.DS_Store
