@@ -1,6 +1,10 @@
 #include "Camara.h"
 #include <stdlib.h>
+#ifdef __APPLE__
 #include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 #include "Vector_tools.h"
 
 Camara::Camara() {
